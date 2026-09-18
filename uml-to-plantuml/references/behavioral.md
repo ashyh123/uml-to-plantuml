@@ -67,9 +67,9 @@ title <系统名> · “<用例名>”用例顺序图
 hide footbox
 
 actor User
-participant "«boundary»\n__LoginUI__\n<u>＿＿＿＿＿</u>" as UI
-participant "«control»\n__LoginManager__\n<u>＿＿＿＿＿＿＿＿＿</u>" as CM
-participant "«entity»\n__UserLibrary__\n<u>＿＿＿＿＿＿＿＿＿</u>" as UL
+participant "«boundary»\n__LoginUI__" as UI
+participant "«control»\n__LoginManager__" as CM
+participant "«entity»\n__UserLibrary__" as UL
 
 User -> UI : 1: 发起登录()
 activate UI
@@ -90,7 +90,7 @@ deactivate CM
 deactivate UI
 @enduml
 ```
-连线规范（必须遵守）：请求/调用消息实线 `->` 且顺号（1、2、3…）；**返回消息虚线 `-->` 且不编号**；**界面最终结果反馈（错误提示并停留、禁止继续提交、跳转主界面、提示成功）实线并顺号编号**；界面中间展示可用自消息（实线、顺号）。参与者名称下加横线（课件约定，UML 对象名下划线）：`participant "«boundary»\n__名称__\n<u>＿＿＿＿＿</u>" as X`——Creole `__` 仅加粗，下划线用全角低线 `＿＿＿＿＿` 模拟（已实测 Kroki 渲染有效）。
+连线规范（必须遵守）：请求/调用消息实线 `->` 且顺号（1、2、3…）；**返回消息虚线 `-->` 且不编号**；**界面最终结果反馈（错误提示并停留、禁止继续提交、跳转主界面、提示成功）实线并顺号编号**；界面中间展示可用自消息（实线、顺号）。参与者用构造型＋加粗名称（PlantUML 顺序图无法渲染文字真下划线，勿用全角低线等模拟写法，实测均无效或效果差）。
 常用组合片段：`alt/else/end`（分支）、`loop/end`（循环）、`opt/end`（可选）、`par/end`（并行）、`group`（命名组）；自消息 `A -> A`；激活 `activate/deactivate`。
 
 ## 活动图（activity）
