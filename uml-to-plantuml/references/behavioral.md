@@ -50,12 +50,13 @@ end note
 
 **课件方法要点**
 - 面向对象分析（BCE）布局：外部执行者最左，紧邻其右是边界类（boundary，界面/外部接口），再往右控制类（control），最右实体类（entity）；消息自上而下按时序排列。
-- 消息名称用动名词（请求/通知意图），参数用名词或名词短语；可编号（1、1.1、1.1.1）并标注循环（如 `循环[次数<=3]`）。
+- 消息名称用动名词（请求/通知意图），参数用名词或名词短语；编号按业务逻辑顺序顺号（1、2、3…，不用 1.1/1.1.1 层级）；循环片段用 `loop` 并标注守卫（如 `循环[次数<=3]`）。
+- 连线规范：请求/调用消息用实线 `->`；**返回消息统一虚线 `-->` 且不编号**；**界面最终结果反馈**（错误提示并停留、禁止继续提交、跳转至系统主界面、提示操作成功等面向用户/外部的最终结果）**统一实线 `->` 并顺号编号**；界面中间展示用自消息（实线、顺号）。
 - 不应出现穿越控制类生命线的消息；业务流程分支用 alt/opt/loop 组合片段表达。
 - 一个用例至少一张交互图；复杂用例按场景拆多张。
 - 界面设计可用顺序图表示界面跳转流（界面元素作为参与者，跳转动作作为消息）。
 
-**PlantUML 模板（课件风格）**
+**PlantUML 模板（课件风格＋顺号连线规范）**
 ```plantuml
 @startuml
 skinparam backgroundColor #FFFFFF
@@ -66,34 +67,31 @@ title <系统名> · “<用例名>”用例顺序图
 hide footbox
 
 actor User
-participant "«boundary»\nLoginUI" as UI
-participant "«control»\nLoginManager" as CM
-participant "«entity»\nUserLibrary" as UL
+participant "«boundary»\n__LoginUI__\n<u>＿＿＿＿＿</u>" as UI
+participant "«control»\n__LoginManager__\n<u>＿＿＿＿＿＿＿＿＿</u>" as CM
+participant "«entity»\n__UserLibrary__\n<u>＿＿＿＿＿＿＿＿＿</u>" as UL
 
-User -> UI : 1: goto
+User -> UI : 1: 发起登录()
 activate UI
-UI -> CM : 1.1: login(account, password)
+UI -> CM : 2: 验证用户(account, password)
 activate CM
-CM -> UL : 1.1.1: verifyUser(account, password)
-UL --> CM : UserIsInvalid
-CM --> UI : LoginResult(FAILED)
-deactivate CM
-UI -> UI : 1.2: showIncorrectUserInfo()
-loop 循环[循环次数<=3]
-  User -> UI : 2: login(account, password)
-  UI -> CM : 2.1: verifyUser(account, password)
-  activate CM
-  CM -> UL : 2.1.1: isUserValid(account, password)
-  UL --> CM : UserIsValid
-  CM --> UI : LoginResult(SUCCESS)
-  deactivate CM
+CM -> UL : 3: 查询用户(account)
+UL --> CM : 用户信息
+alt 验证通过
+  CM --> UI : 验证结果
+  UI -> UI : 4: 跳转至系统主界面()
+  UI -> User : 5: 显示登录成功
+else 验证失败
+  CM --> UI : 验证结果
+  UI -> User : 6: 错误提示并停留
+  UI -> UI : 7: 禁止继续提交()
 end
-UI --> User : 3: 显示登录结果
+deactivate CM
 deactivate UI
 @enduml
 ```
-课件风格要点：参与者用 `participant "«构造型»\n名称" as X` 矩形框（不用 boundary/control/entity 关键字，避免圆圈图标）；编号采用课件式层级（1 / 1.1 / 1.1.1，界面展示类自消息编为 1.2/2.2）；用例约束用黄色 `note`；关键消息可 `-[#red]>` 强调。
-常用组合片段：`alt/else/end`（分支）、`loop/end`（循环）、`opt/end`（可选）、`par/end`（并行）、`group`（命名组）；自消息 `A -> A`；返回消息用 `-->`；激活 `activate/deactivate`。
+连线规范（必须遵守）：请求/调用消息实线 `->` 且顺号（1、2、3…）；**返回消息虚线 `-->` 且不编号**；**界面最终结果反馈（错误提示并停留、禁止继续提交、跳转主界面、提示成功）实线并顺号编号**；界面中间展示可用自消息（实线、顺号）。参与者名称下加横线（课件约定，UML 对象名下划线）：`participant "«boundary»\n__名称__\n<u>＿＿＿＿＿</u>" as X`——Creole `__` 仅加粗，下划线用全角低线 `＿＿＿＿＿` 模拟（已实测 Kroki 渲染有效）。
+常用组合片段：`alt/else/end`（分支）、`loop/end`（循环）、`opt/end`（可选）、`par/end`（并行）、`group`（命名组）；自消息 `A -> A`；激活 `activate/deactivate`。
 
 ## 活动图（activity）
 

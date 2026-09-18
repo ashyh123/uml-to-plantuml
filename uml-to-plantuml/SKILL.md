@@ -11,7 +11,7 @@ description: 依据软件工程建模方法（BCE 分析类、用例模型、详
 2. 写 `.puml` 文件（结构化命名：`<场景>_<序号>_<类型>_<标题>.puml`）。
 3. 渲染并校验：`python scripts/render_puml.py <file>.puml`（零本地依赖，Kroki → plantuml.com 自动兜底）。
 4. 失败则按 [references/workflow.md](references/workflow.md) 的降级阶梯自纠（最多 3 轮），再读 PNG 做视觉自检。
-5. 交付代码块 + 图片；涉密内容禁止用公共渲染服务。
+5. **只交付两样：渲染后的 UML 图片 ＋ 完整 PlantUML 代码块**。不输出方法依据、设计说明、渲染提示、文件路径列表等任何其他内容；涉密内容禁止用公共渲染服务。
 
 五种模式（Generate / From code / Embed / Refine / Review）的路由与完整闭环见 [references/workflow.md](references/workflow.md)。
 
@@ -29,13 +29,14 @@ description: 依据软件工程建模方法（BCE 分析类、用例模型、详
 | 包图 | package | [references/structural.md](references/structural.md) §包图 |
 | 构件图 / 组件图 | component | [references/structural.md](references/structural.md) §构件图 |
 | 部署图 | deployment | [references/structural.md](references/structural.md) §部署图 |
+| 架构图 / 体系结构图 | architecture | [references/structural.md](references/structural.md) §架构图（软件体系结构） |
 | 控制流图 / 流图 / 程序流程图 | flow | [references/mgmt-testing.md](references/mgmt-testing.md) §控制流图 |
 | 甘特图 | gantt | [references/mgmt-testing.md](references/mgmt-testing.md) §甘特图 |
 | PERT 图 / 网络图 / 关键路径图 | network | [references/mgmt-testing.md](references/mgmt-testing.md) §PERT网络图 |
 
 ## 生成原则
 
-- **先建模后翻译**：先按方法要点确定要素（如 BCE 三类分析类、消息命名动名词、决策边条件互斥），再写 PlantUML 语法；回复中简要说明设计依据。
+- **先建模后翻译**：先按方法要点确定要素（如 BCE 三类分析类、消息命名动名词、决策边条件互斥），再写 PlantUML 语法。
 - **默认课件风格**（与软件工程课件视觉统一，消除"AI 感"），规则见下节"课件风格约定"；用户明确要求其他风格时再切换。
 
 ## 课件风格约定（默认样式）
@@ -50,7 +51,7 @@ title <系统名> · <图名>
 ' 类图额外加：skinparam classAttributeIconSize 0 + CircledCharacterRadius 0 + CircledCharacterFontSize 0（去除工具图标）
 ```
 
-- **顺序图**：参与者用 `participant "«boundary»\n名称" as X` 矩形框（不用 boundary/control/entity 关键字，避免圆圈图标）；课件式编号（1 / 1.1 / 1.1.1，展示类自消息编为 1.2/2.2）；用例约束用黄色 `note` 批注；关键消息可用 `-[#red]>` 强调。
+- **顺序图**：参与者用 `participant "«boundary»\n__名称__\n<u>＿＿＿＿＿</u>" as X` 矩形框（不用 boundary/control/entity 关键字，避免圆圈图标；**名称下加横线**，课件约定，Creole `__` 只加粗，下划线用全角低线 `＿＿＿＿＿` 模拟，已实测渲染）；**编号按业务逻辑顺序顺号标注**（1、2、3…，不用 1.1/1.1.1 层级）；**返回消息统一虚线 `-->` 且不编号**；**界面最终结果反馈**（错误提示并停留、禁止继续提交、跳转主界面、提示成功等）**统一实线 `->` 并顺号编号**；界面中间展示可用自消息（实线、顺号）；用例约束用黄色 `note` 批注；关键消息可用 `-[#red]>` 强调。
 - **用例图**：执行者与用例之间用无向边 `--`（课件规定）；用例关系用 `..>` 虚线箭头＋«include»/«extend»；补充说明用黄色 note。
 - **类图**：构造型写 `<<boundary>>`/`<<control>>`/`<<entity>>` 于类名上方；关系标多重性；可见性用 +/−/#。
 - **禁用 `!theme sketchy`**：手绘主题在中文消息标签上会丢字（已实测，Kroki/plantuml.com 均复现）。
