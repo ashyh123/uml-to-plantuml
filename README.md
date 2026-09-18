@@ -33,6 +33,20 @@ npx skills add ashyh123/uml-to-plantuml
 
 下载后将 `uml-to-plantuml/` 目录复制到你的 agent skills 目录（如 `~/.config/agents/skills/` 或 Kimi Work 的 `daimon/skills/`），或用 `.skill` 包通过包管理器安装。
 
+## 更新
+
+重新执行同一条下载命令即可覆盖为最新版（`-L` 跟随跳转，始终取 main 分支最新提交）：
+
+```bash
+curl -L -o uml-to-plantuml.skill https://raw.githubusercontent.com/ashyh123/uml-to-plantuml/main/uml-to-plantuml.skill
+```
+
+git clone 方式则直接拉取：
+
+```bash
+cd uml-to-plantuml && git pull
+```
+
 ## 使用
 
 ```text
