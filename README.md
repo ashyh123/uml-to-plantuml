@@ -38,7 +38,7 @@ npx skills add ashyh123/uml-to-plantuml
 画一张医院挂号系统的预约医生顺序图（BCE 分析）
 ```
 
-Skill 会：识别图型 → 按方法要点建模 → 生成 .puml → 渲染校验 → 视觉自检 → 交付代码与图片。
+Skill 会：识别图型 → 按方法要点建模 → 生成 .puml → 渲染校验 → 视觉自检 → **只输出渲染图片与 PlantUML 代码**。
 
 ## 致谢
 
