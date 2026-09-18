@@ -19,7 +19,18 @@
 
 ## 安装
 
-将 `uml-to-plantuml/` 目录复制到你的 agent skills 目录（如 `~/.config/agents/skills/` 或 Kimi Work 的 `daimon/skills/`），或将 `uml-to-plantuml.skill` 通过包管理器安装。
+```bash
+# 方式一：直接下载 .skill 安装包
+curl -L -o uml-to-plantuml.skill https://raw.githubusercontent.com/ashyh123/uml-to-plantuml/main/uml-to-plantuml.skill
+
+# 方式二：git clone 整个仓库
+git clone https://github.com/ashyh123/uml-to-plantuml.git
+
+# 方式三：skills CLI（Claude Code / Cursor 等）
+npx skills add ashyh123/uml-to-plantuml
+```
+
+下载后将 `uml-to-plantuml/` 目录复制到你的 agent skills 目录（如 `~/.config/agents/skills/` 或 Kimi Work 的 `daimon/skills/`），或用 `.skill` 包通过包管理器安装。
 
 ## 使用
 
