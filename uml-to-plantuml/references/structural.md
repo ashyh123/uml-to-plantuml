@@ -111,26 +111,41 @@ RC --> DB
 
 ## 部署图（deployment）
 
-**课件方法要点**：描述工件（artifact）在物理运行环境中的部署，如节点（服务器/设备/机器人）上部署的构件。
+**课件方法要点**：描述工件（artifact）在物理运行环境中的部署。①实例性节点命名"节点名: 类型名"（如 `1#服务器: Web服务器`、`客户端: Web客户端`）；②节点内驻留工件以 `<<artifact>>` 标识，部署规格 `<<deploymentSpec>>` 工件内写配置参数（键=值逐行列出）；③持久数据用数据库符号（圆柱）；④节点间通信边标注协议构造型（`<<HTTP>>`、`<<JDBC>>`、`<<Web Services>>`）；⑤按"客户端→Web服务器→应用服务器→数据库/外部服务器"链条**从左到右**布局，节点行列对齐、避免斜线。
 
+**PlantUML 模板（课件风格，含实例节点/协议构造型/部署规格）**
 ```plantuml
 @startuml
 skinparam backgroundColor #FFFFFF
+left to right direction
 title <系统名> · 部署图
-node "家属手机" as phone {
-  artifact "Android APP.apk"
+
+node "客户端\n: Web客户端" as client {
+  artifact "由WebUI生成的HTML页面\n(含JavaScript代码)" as html <<artifact>>
 }
-node "看护机器人" as robot {
-  artifact "ROS 节点包"
-  component RobotController
+node "1#服务器\n: Web服务器" as websrv {
+  artifact "WebUI\n(JSP+JavaScript)" as webui <<artifact>>
 }
-node "云服务器" as cloud {
-  database "用户数据库"
+node "3#小型机\n: 应用服务器" as appsrv {
+  artifact "customer.jar" as custjar <<artifact>>
+  artifact "customerDeploy.xml\npointPerHundred=10\nsilverMinPoint=1000\ngoldenMinPoint=5000" as depxml <<deploymentSpec>>
+  artifact "order&ticket.jar" as otjar <<artifact>>
 }
-phone ..> robot : 远程控制(WiFi)
-robot ..> cloud : 同步数据(4G)
+node "6#服务器\n: 数据库服务器" as dbsrv {
+  database "持久数据" as pdata
+}
+node "A航空公司\n票务服务器" as airlineA {
+  [AirlineCompany] as compA
+}
+
+client --> websrv : <<HTTP>>
+websrv --> appsrv
+appsrv --> dbsrv : <<JDBC>>
+appsrv --> airlineA : <<Web Services>>
+depxml ..> custjar
 @enduml
 ```
+实测技巧：①`<<deploymentSpec>>` 的配置参数**不要写属性块**（`{ k=v }` 渲染成乱码圆圈），写在名称字符串里用 `\n` 逐行排；②实例节点名"名称: 类型"用 `\n` 折行；③协议构造型直接作边的标签（`: <<HTTP>>`）。
 
 ## 架构图（软件体系结构）
 
@@ -170,3 +185,36 @@ note bottom of jar #FFF7CC
 end note
 @enduml
 ```
+
+**分层体系结构图（layered）**——课件常见画法：纵向分层（用户界面层/业务逻辑层/基础服务层等），每层一个 package（自带标签页），层内放构件；层间交互边标注"请求/应答"（双向请求）与"事件"（上行通知）；对外服务可声明《Interface》接口，由本层构件实现。
+
+```plantuml
+@startuml
+skinparam backgroundColor #FFFFFF
+title <系统名> · 分层体系结构图
+
+package "用户界面层" {
+  [接收用户命令] as UICmd
+  [Linphone4Android] as UILin
+  [显示老人状况] as UIDisp
+}
+package "业务逻辑层" {
+  [分析和处理老人信息] as Biz
+  [控制机器人运行] as Ctrl
+  rectangle "«Interface»\nDataService" as IDataService
+  [DataService] as Impl
+}
+package "基础服务层" {
+  [ROS] as ROS
+  database "MySQL" as MySQL
+}
+
+UICmd --> Biz : 请求/应答
+UIDisp <-- Biz : 事件
+Biz --> Impl
+Impl --> IDataService
+Biz --> ROS : 请求/应答
+Impl --> MySQL : 事件
+@enduml
+```
+实测技巧：①课件式接口是**方框**（《Interface》在上、名称在下），不是棒棒糖——用 `rectangle "«Interface»\n名称" as X` 画方框接口，构件与接口连线表示实现；棒棒糖（`interface` 关键字）只用于构件图的供给/需求接口；②`allow_mixing` 在 Kroki 后端混合 node+component 时会报 400，混排构件/节点/包时**不写** `allow_mixing`（实测裸混排即可正常渲染）。
