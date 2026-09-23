@@ -212,6 +212,14 @@ package "基础服务层" {
   database "MySQL" as MySQL
 }
 
+' 层内行序 + 底层整体压到最底行（隐形边布局法）
+UICmd -[hidden]r- UILin
+UILin -[hidden]r- UIDisp
+Biz -[hidden]r- Ctrl
+ROS -[hidden]r- MySQL
+IDataService -[hidden]d- ROS
+IDataService -[hidden]d- MySQL
+
 UICmd --> Biz : 请求/应答
 UIDisp <-- Biz : 事件
 Biz --> Impl
@@ -220,4 +228,4 @@ Biz --> ROS : 请求/应答
 Impl --> MySQL : 事件
 @enduml
 ```
-实测技巧：①课件式接口是**方框**（《Interface》在上、名称在下），不是棒棒糖——用 `rectangle "«Interface»\n名称" as X` 画方框接口，构件与接口连线表示实现；棒棒糖（`interface` 关键字）只用于构件图的供给/需求接口；②`allow_mixing` 在 Kroki 后端混合 node+component 时会报 400，混排构件/节点/包时**不写** `allow_mixing`（实测裸混排即可正常渲染）。
+实测技巧：①**总体自上而下布局（隐形边布局法）**：`top to bottom direction`＋`skinparam linetype ortho` 只保证大方向，要让每层严格横成行、层层竖直堆叠，需加隐形边——层内构件用 `X -[hidden]r- Y` 锁成同一行，用本层最底构件（如接口）`X -[hidden]d- 底层构件` 把下一层整体压到最底行；②渲染左右顺序与声明顺序镜像，层内顺序不对时**反转该层声明顺序**即可；③课件式接口是**方框**（《Interface》在上、名称在下），不是棒棒糖——用 `rectangle "«Interface»\n名称" as X` 画方框接口，构件与接口连线表示实现；棒棒糖（`interface` 关键字）只用于构件图的供给/需求接口；④`allow_mixing` 在 Kroki 后端混合 node+component 时会报 400，混排构件/节点/包时**不写** `allow_mixing`（实测裸混排即可正常渲染）。
