@@ -117,6 +117,7 @@ RC --> DB
 ```plantuml
 @startuml
 skinparam backgroundColor #FFFFFF
+skinparam linetype ortho
 left to right direction
 title <系统名> · 部署图
 
@@ -191,6 +192,8 @@ end note
 ```plantuml
 @startuml
 skinparam backgroundColor #FFFFFF
+skinparam linetype ortho
+top to bottom direction
 title <系统名> · 分层体系结构图
 
 package "用户界面层" {

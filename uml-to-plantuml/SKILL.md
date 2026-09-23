@@ -55,7 +55,7 @@ title <系统名> · <图名>
 - **用例图**：执行者与用例之间用无向边 `--`（课件规定）；用例关系用 `..>` 虚线箭头＋«include»/«extend»；补充说明用黄色 note。
 - **类图**：构造型写 `<<boundary>>`/`<<control>>`/`<<entity>>` 于类名上方；关系标多重性；可见性用 +/−/#。
 - **部署图**：实例节点命名"节点名: 类型名"；节点内工件标 `<<artifact>>`/`<<deploymentSpec>>`（配置参数写名称串内逐行，勿用属性块）；通信边标协议构造型 `<<HTTP>>`/`<<JDBC>>`/`<<Web Services>>`；链条从左到右布局。
-- **架构图**：分层体系结构用 package 作层（用户界面层/业务逻辑层/基础服务层），层间边标"请求/应答"与"事件"；课件式接口画 `rectangle "«Interface»\n名称"` 方框，不用棒棒糖。
+- **架构图**：分层体系结构用 package 作层（用户界面层/业务逻辑层/基础服务层），**自上而下排列**（`top to bottom direction`），连线用正交折线（`skinparam linetype ortho`，横平竖直、避免斜线），层间边标"请求/应答"与"事件"；课件式接口画 `rectangle "«Interface»\n名称"` 方框，不用棒棒糖。
 - **禁用 `!theme sketchy`**：手绘主题在中文消息标签上会丢字（已实测，Kroki/plantuml.com 均复现）。
 - 每个图独立 `.puml` 文件；结构图可混排构件/节点/包（不写 `allow_mixing`，Kroki 后端混合 node+component 时该指令会报 400，裸混排即可）；大图（>15 节点）拆多张。
 - 公共渲染服务会收到图源码，涉密场景改用本地 plantuml.jar。
